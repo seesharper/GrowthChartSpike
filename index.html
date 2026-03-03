@@ -4540,6 +4540,7 @@
     <g id="weight-data"></g>
     <g id="length-data"></g>
     <g id="headcirc-data"></g>
+    <g id="table-data"></g>
 
 </svg>
 
@@ -4722,8 +4723,53 @@
             store.push({ ageMonths: age, value: val });
             redraw(groupId, store, toY, color, unit);
             updateList(listId, store, unit);
+            redrawTable();
             document.getElementById(ageId).value = '';
             document.getElementById(valId).value = '';
+        });
+    }
+
+    // ── Table (lower-right corner) ────────────────────────────────────────────────
+    // Column centres (x): Alder=407.16, Vekt=453.10, Lengde=499.04, Hodeomkrets=544.98
+    // Header row y=683.85–697.32; data rows pitch=13.47px; 9 rows available
+    const TABLE_COL_X     = [407.16, 453.10, 499.04, 544.98];
+    const TABLE_ROW0_Y    = 706.52;   // baseline of first data row
+    const TABLE_ROW_PITCH = 13.47;
+    const TABLE_MAX_ROWS  = 9;
+
+    function redrawTable() {
+        const ns    = 'http://www.w3.org/2000/svg';
+        const group = document.getElementById('table-data');
+        while (group.firstChild) group.removeChild(group.firstChild);
+
+        // Merge all data stores into one map keyed by age
+        const byAge = {};
+        for (const pt of weightData)   { (byAge[pt.ageMonths] = byAge[pt.ageMonths] || {}).weight   = pt.value; }
+        for (const pt of lengthData)   { (byAge[pt.ageMonths] = byAge[pt.ageMonths] || {}).length   = pt.value; }
+        for (const pt of headCircData) { (byAge[pt.ageMonths] = byAge[pt.ageMonths] || {}).headCirc = pt.value; }
+
+        const ages = Object.keys(byAge).map(Number).sort((a, b) => a - b);
+
+        ages.slice(0, TABLE_MAX_ROWS).forEach((age, i) => {
+            const y   = TABLE_ROW0_Y + i * TABLE_ROW_PITCH;
+            const row = byAge[age];
+
+            function cell(text, colIdx) {
+                const t = document.createElementNS(ns, 'text');
+                t.setAttribute('x', TABLE_COL_X[colIdx]);
+                t.setAttribute('y', y.toFixed(2));
+                t.setAttribute('font-family', 'sans-serif');
+                t.setAttribute('font-size', '7');
+                t.setAttribute('fill', '#111');
+                t.setAttribute('text-anchor', 'middle');
+                t.textContent = text;
+                return t;
+            }
+
+            group.appendChild(cell(age + ' mnd', 0));
+            if (row.weight   != null) group.appendChild(cell(row.weight.toFixed(1).replace('.', ',')   + ' kg', 1));
+            if (row.length   != null) group.appendChild(cell(row.length.toFixed(1).replace('.', ','),          2));
+            if (row.headCirc != null) group.appendChild(cell(row.headCirc.toFixed(1).replace('.', ','),        3));
         });
     }
 
