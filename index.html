@@ -4536,6 +4536,7 @@
     </g>
 
     <!-- Dynamically plotted measurements -->
+    <g id="patient-info"></g>
     <g id="weight-data"></g>
     <g id="length-data"></g>
     <g id="headcirc-data"></g>
@@ -4543,6 +4544,27 @@
 </svg>
 
 <div style="font-family:sans-serif;padding:16px;min-width:220px;border-left:1px solid #ddd;overflow-y:auto;max-height:100vh;box-sizing:border-box;">
+
+    <!-- Patient info -->
+    <h3 style="margin-top:0;margin-bottom:8px;">Pasient</h3>
+    <form id="patient-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Navn</label>
+            <input type="text" id="patient-name" placeholder="Fullt navn"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
+        </div>
+        <div>
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Født</label>
+            <input type="date" id="patient-dob"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
+        </div>
+        <button type="submit"
+            style="padding:7px;background:#555;color:white;border:none;cursor:pointer;font-size:13px;border-radius:4px;">
+            Oppdater
+        </button>
+    </form>
+
+    <hr style="margin:16px 0;border:none;border-top:1px solid #ddd;">
 
     <!-- Weight -->
     <h3 style="margin-top:0;margin-bottom:8px;color:rgb(220,30,30);">Vekt (kg)</h3>
@@ -4711,6 +4733,37 @@
         lengthData,   'length-data',   lengthToY,   'rgb(30,100,220)', 'cm', 'length-list',  45,  85);
     makeHandler('headcirc-form','age-headcirc','val-headcirc',
         headCircData, 'headcirc-data', headCircToY, 'rgb(30,160,90)',  'cm', 'headcirc-list', 32, 52);
+
+    // ── Patient info ─────────────────────────────────────────────────────────────
+    // Patient info box top-left: Navn label y=27.37, underline y=49, Født label y=56.05, box bottom y=77.7
+    document.getElementById('patient-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('patient-name').value.trim();
+        const dob  = document.getElementById('patient-dob').value; // YYYY-MM-DD
+
+        const ns    = 'http://www.w3.org/2000/svg';
+        const group = document.getElementById('patient-info');
+        while (group.firstChild) group.removeChild(group.firstChild);
+
+        function makeTxt(text, x, y) {
+            const t = document.createElementNS(ns, 'text');
+            t.setAttribute('x', x);
+            t.setAttribute('y', y);
+            t.setAttribute('font-family', 'sans-serif');
+            t.setAttribute('font-size', '11');
+            t.setAttribute('fill', '#111');
+            t.textContent = text;
+            return t;
+        }
+
+        if (name) {
+            group.appendChild(makeTxt(name, 30, 44));
+        }
+        if (dob) {
+            const [yr, mo, day] = dob.split('-');
+            group.appendChild(makeTxt(day + '.' + mo + '.' + yr, 30, 69));
+        }
+    });
 
     // ── Tooltip ──────────────────────────────────────────────────────────────────
     function showTooltip(evt, text) {
