@@ -1,5 +1,6 @@
 <html>
 <h1>Growth Chart example with tooltip</h1>
+<div style="display:flex;align-items:flex-start;gap:24px;">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="595pt" height="842pt"
     viewBox="0 0 595 842" version="1.1">
     <defs>
@@ -4538,66 +4539,70 @@
     <g id="plotted-data"></g>
 
 </svg>
+
+<div style="font-family:sans-serif;padding:16px;min-width:220px;border-left:1px solid #ddd;">
+    <h3 style="margin-top:0;margin-bottom:16px;">Register Weight</h3>
+    <form id="weight-form" style="display:flex;flex-direction:column;gap:12px;">
+        <div>
+            <label for="age-input" style="display:block;margin-bottom:4px;font-size:14px;">Age (months, 0-12)</label>
+            <input type="number" id="age-input" min="0" max="12" step="1" placeholder="e.g. 3"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:14px;">
+        </div>
+        <div>
+            <label for="weight-input" style="display:block;margin-bottom:4px;font-size:14px;">Weight (kg)</label>
+            <input type="number" id="weight-input" min="2" max="15" step="0.1" placeholder="e.g. 6.5"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:14px;">
+        </div>
+        <button type="submit"
+            style="padding:8px;background:rgb(220,30,30);color:white;border:none;cursor:pointer;font-size:14px;border-radius:4px;">
+            Add Registration
+        </button>
+    </form>
+    <div id="reg-list" style="margin-top:16px;font-size:13px;color:#333;"></div>
+</div>
+
+</div><!-- end flex wrapper -->
 <div id="tooltip" display="none" style="position: absolute; display: none;"></div>
 
 </html>
 
 <script>
-    // Chart coordinate constants derived from SVG axis analysis:
-    //   X-axis: age 0–12 months mapped to SVG x 54–541.3  → 40.607 px/month
-    //   Y-axis: weight 2–15 kg mapped to SVG y 788–282     → 33.74 px/kg (y decreases upward)
-    const CHART_X_ORIGIN  = 54;       // SVG x for age = 0 months
-    const PX_PER_MONTH    = 40.607;   // SVG pixels per month
-    const CHART_Y_BOTTOM  = 788;      // SVG y for weight = 2 kg (chart bottom)
-    const PX_PER_KG       = 33.74;    // SVG pixels per kg
-    const WEIGHT_AT_BOTTOM = 2;       // kg at chart bottom
+    // Chart coordinate constants (derived from SVG axis analysis):
+    //   X-axis: age 0-12 months -> SVG x 54-541  (40.607 px/month)
+    //   Y-axis: weight 2-15 kg  -> SVG y 788-282  (33.74 px/kg, y decreases upward)
+    const CHART_X_ORIGIN   = 54;
+    const PX_PER_MONTH     = 40.607;
+    const CHART_Y_BOTTOM   = 788;
+    const PX_PER_KG        = 33.74;
+    const WEIGHT_AT_BOTTOM = 2;
 
     function ageToX(ageMonths) {
         return CHART_X_ORIGIN + ageMonths * PX_PER_MONTH;
     }
-
     function weightToY(weightKg) {
         return CHART_Y_BOTTOM - (weightKg - WEIGHT_AT_BOTTOM) * PX_PER_KG;
     }
 
-    // Random-ish but realistic infant weight registrations (0–12 months)
-    const weightRegistrations = [
-        { ageMonths:  0, weightKg: 3.3 },
-        { ageMonths:  1, weightKg: 4.2 },
-        { ageMonths:  2, weightKg: 5.1 },
-        { ageMonths:  3, weightKg: 5.9 },
-        { ageMonths:  4, weightKg: 6.5 },
-        { ageMonths:  5, weightKg: 7.0 },
-        { ageMonths:  6, weightKg: 7.5 },
-        { ageMonths:  7, weightKg: 7.9 },
-        { ageMonths:  8, weightKg: 8.2 },
-        { ageMonths:  9, weightKg: 8.6 },
-        { ageMonths: 10, weightKg: 8.9 },
-        { ageMonths: 11, weightKg: 9.1 },
-        { ageMonths: 12, weightKg: 9.4 },
-    ];
+    let registrations = [];
 
-    function plotWeightRegistrations(data) {
+    function redraw() {
         const ns = 'http://www.w3.org/2000/svg';
         const group = document.getElementById('plotted-data');
+        while (group.firstChild) group.removeChild(group.firstChild);
 
-        // Draw connecting lines first (so circles render on top)
-        for (let i = 1; i < data.length; i++) {
-            const x1 = ageToX(data[i - 1].ageMonths).toFixed(1);
-            const y1 = weightToY(data[i - 1].weightKg).toFixed(1);
-            const x2 = ageToX(data[i].ageMonths).toFixed(1);
-            const y2 = weightToY(data[i].weightKg).toFixed(1);
+        const sorted = [...registrations].sort((a, b) => a.ageMonths - b.ageMonths);
+
+        for (let i = 1; i < sorted.length; i++) {
             const line = document.createElementNS(ns, 'line');
-            line.setAttribute('x1', x1);
-            line.setAttribute('y1', y1);
-            line.setAttribute('x2', x2);
-            line.setAttribute('y2', y2);
+            line.setAttribute('x1', ageToX(sorted[i - 1].ageMonths).toFixed(1));
+            line.setAttribute('y1', weightToY(sorted[i - 1].weightKg).toFixed(1));
+            line.setAttribute('x2', ageToX(sorted[i].ageMonths).toFixed(1));
+            line.setAttribute('y2', weightToY(sorted[i].weightKg).toFixed(1));
             line.setAttribute('style', 'stroke:rgb(220,30,30);stroke-width:1.5');
             group.appendChild(line);
         }
 
-        // Draw circles for each measurement
-        for (const point of data) {
+        for (const point of sorted) {
             const x = ageToX(point.ageMonths).toFixed(1);
             const y = weightToY(point.weightKg).toFixed(1);
             const label = point.weightKg.toFixed(1).replace('.', ',') + ' kg  (age ' + point.ageMonths + ' mo)';
@@ -4613,20 +4618,40 @@
         }
     }
 
+    function updateList() {
+        const list = document.getElementById('reg-list');
+        if (registrations.length === 0) { list.innerHTML = ''; return; }
+        const sorted = [...registrations].sort((a, b) => a.ageMonths - b.ageMonths);
+        list.innerHTML = '<strong>Registrations:</strong><ul style="margin:6px 0;padding-left:18px;">' +
+            sorted.map(p =>
+                `<li>${p.ageMonths} mo: ${p.weightKg.toFixed(1).replace('.', ',')} kg</li>`
+            ).join('') + '</ul>';
+    }
+
+    document.getElementById('weight-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const age    = parseFloat(document.getElementById('age-input').value);
+        const weight = parseFloat(document.getElementById('weight-input').value);
+        if (isNaN(age) || isNaN(weight)) return;
+        if (age < 0 || age > 12 || weight < 2 || weight > 15) return;
+        registrations.push({ ageMonths: age, weightKg: weight });
+        redraw();
+        updateList();
+        document.getElementById('age-input').value    = '';
+        document.getElementById('weight-input').value = '';
+    });
+
     function showTooltip(evt, text) {
-        let tooltip = document.getElementById("tooltip");
+        const tooltip = document.getElementById("tooltip");
         tooltip.innerHTML = text;
         tooltip.style.display = "block";
         tooltip.style.left = evt.pageX + 10 + 'px';
-        tooltip.style.top = evt.pageY + 10 + 'px';
+        tooltip.style.top  = evt.pageY + 10 + 'px';
     }
 
     function hideTooltip() {
-        var tooltip = document.getElementById("tooltip");
-        tooltip.style.display = "none";
+        document.getElementById("tooltip").style.display = "none";
     }
-
-    plotWeightRegistrations(weightRegistrations);
 </script>
 <style>
     #tooltip {
