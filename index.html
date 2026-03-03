@@ -4535,30 +4535,79 @@
 
     </g>
 
-    <!-- Dynamically plotted weight registrations -->
-    <g id="plotted-data"></g>
+    <!-- Dynamically plotted measurements -->
+    <g id="weight-data"></g>
+    <g id="length-data"></g>
+    <g id="headcirc-data"></g>
 
 </svg>
 
-<div style="font-family:sans-serif;padding:16px;min-width:220px;border-left:1px solid #ddd;">
-    <h3 style="margin-top:0;margin-bottom:16px;">Register Weight</h3>
-    <form id="weight-form" style="display:flex;flex-direction:column;gap:12px;">
+<div style="font-family:sans-serif;padding:16px;min-width:220px;border-left:1px solid #ddd;overflow-y:auto;max-height:100vh;box-sizing:border-box;">
+
+    <!-- Weight -->
+    <h3 style="margin-top:0;margin-bottom:8px;color:rgb(220,30,30);">Vekt (kg)</h3>
+    <form id="weight-form" style="display:flex;flex-direction:column;gap:10px;">
         <div>
-            <label for="age-input" style="display:block;margin-bottom:4px;font-size:14px;">Age (months, 0-12)</label>
-            <input type="number" id="age-input" min="0" max="12" step="1" placeholder="e.g. 3"
-                style="width:100%;box-sizing:border-box;padding:6px;font-size:14px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Alder (mnd, 0-12)</label>
+            <input type="number" id="age-weight" min="0" max="12" step="1" placeholder="f.eks. 3"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
         </div>
         <div>
-            <label for="weight-input" style="display:block;margin-bottom:4px;font-size:14px;">Weight (kg)</label>
-            <input type="number" id="weight-input" min="2" max="15" step="0.1" placeholder="e.g. 6.5"
-                style="width:100%;box-sizing:border-box;padding:6px;font-size:14px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Vekt (kg)</label>
+            <input type="number" id="val-weight" min="2" max="15" step="0.1" placeholder="f.eks. 6.5"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
         </div>
         <button type="submit"
-            style="padding:8px;background:rgb(220,30,30);color:white;border:none;cursor:pointer;font-size:14px;border-radius:4px;">
-            Add Registration
+            style="padding:7px;background:rgb(220,30,30);color:white;border:none;cursor:pointer;font-size:13px;border-radius:4px;">
+            Legg til
         </button>
     </form>
-    <div id="reg-list" style="margin-top:16px;font-size:13px;color:#333;"></div>
+    <div id="weight-list" style="margin-top:10px;font-size:12px;color:#333;"></div>
+
+    <hr style="margin:16px 0;border:none;border-top:1px solid #ddd;">
+
+    <!-- Length -->
+    <h3 style="margin-top:0;margin-bottom:8px;color:rgb(30,100,220);">Lengde (cm)</h3>
+    <form id="length-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Alder (mnd, 0-12)</label>
+            <input type="number" id="age-length" min="0" max="12" step="1" placeholder="f.eks. 3"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
+        </div>
+        <div>
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Lengde (cm)</label>
+            <input type="number" id="val-length" min="45" max="85" step="0.1" placeholder="f.eks. 65.0"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
+        </div>
+        <button type="submit"
+            style="padding:7px;background:rgb(30,100,220);color:white;border:none;cursor:pointer;font-size:13px;border-radius:4px;">
+            Legg til
+        </button>
+    </form>
+    <div id="length-list" style="margin-top:10px;font-size:12px;color:#333;"></div>
+
+    <hr style="margin:16px 0;border:none;border-top:1px solid #ddd;">
+
+    <!-- Head circumference -->
+    <h3 style="margin-top:0;margin-bottom:8px;color:rgb(30,160,90);">Hodeomkrets (cm)</h3>
+    <form id="headcirc-form" style="display:flex;flex-direction:column;gap:10px;">
+        <div>
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Alder (mnd, 0-12)</label>
+            <input type="number" id="age-headcirc" min="0" max="12" step="1" placeholder="f.eks. 3"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
+        </div>
+        <div>
+            <label style="display:block;margin-bottom:4px;font-size:13px;">Hodeomkrets (cm)</label>
+            <input type="number" id="val-headcirc" min="32" max="52" step="0.1" placeholder="f.eks. 40.0"
+                style="width:100%;box-sizing:border-box;padding:6px;font-size:13px;">
+        </div>
+        <button type="submit"
+            style="padding:7px;background:rgb(30,160,90);color:white;border:none;cursor:pointer;font-size:13px;border-radius:4px;">
+            Legg til
+        </button>
+    </form>
+    <div id="headcirc-list" style="margin-top:10px;font-size:12px;color:#333;"></div>
+
 </div>
 
 </div><!-- end flex wrapper -->
@@ -4567,50 +4616,61 @@
 </html>
 
 <script>
-    // Chart coordinate constants (derived from SVG axis analysis):
-    //   X-axis: age 0-12 months -> SVG x 54-541  (40.607 px/month)
-    //   Y-axis: weight 2-15 kg  -> SVG y 788-282  (33.74 px/kg, y decreases upward)
-    const CHART_X_ORIGIN   = 54;
-    const PX_PER_MONTH     = 40.607;
-    const CHART_Y_BOTTOM   = 788;
-    const PX_PER_KG        = 33.74;
-    const WEIGHT_AT_BOTTOM = 2;
+    // ── Coordinate constants (derived from SVG axis-tick analysis) ──────────────
+    // X-axis: age 0-12 months -> SVG x 54-541  (40.607 px/month)
+    const CHART_X_ORIGIN      = 54;
+    const PX_PER_MONTH        = 40.607;
 
-    function ageToX(ageMonths) {
-        return CHART_X_ORIGIN + ageMonths * PX_PER_MONTH;
-    }
-    function weightToY(weightKg) {
-        return CHART_Y_BOTTOM - (weightKg - WEIGHT_AT_BOTTOM) * PX_PER_KG;
-    }
+    // Weight axis:   2 kg at y_svg=788, scale 33.74 px/kg
+    const WEIGHT_Y_BOTTOM     = 788;
+    const WEIGHT_Y_ORIGIN     = 2;
+    const PX_PER_KG           = 33.74;
 
-    let registrations = [];
+    // Length axis:   y_svg = 942.59 - 8.436 * cm   (ticks at 68-84 cm, right-middle)
+    const LENGTH_Y_INTERCEPT  = 942.59;
+    const PX_PER_CM_LENGTH    = 8.436;
 
-    function redraw() {
-        const ns = 'http://www.w3.org/2000/svg';
-        const group = document.getElementById('plotted-data');
+    // Head-circ axis: y_svg = 900.97 - 16.882 * cm  (ticks at 42-50 cm, right-top)
+    const HEADCIRC_Y_INTERCEPT = 900.97;
+    const PX_PER_CM_HEADCIRC   = 16.882;
+
+    function ageToX(months) { return CHART_X_ORIGIN + months * PX_PER_MONTH; }
+    function weightToY(kg)  { return WEIGHT_Y_BOTTOM - (kg - WEIGHT_Y_ORIGIN) * PX_PER_KG; }
+    function lengthToY(cm)  { return LENGTH_Y_INTERCEPT  - PX_PER_CM_LENGTH   * cm; }
+    function headCircToY(cm){ return HEADCIRC_Y_INTERCEPT - PX_PER_CM_HEADCIRC * cm; }
+
+    // ── Data stores ──────────────────────────────────────────────────────────────
+    let weightData   = [];
+    let lengthData   = [];
+    let headCircData = [];
+
+    // ── Generic redraw ───────────────────────────────────────────────────────────
+    function redraw(groupId, data, toY, color, unit) {
+        const ns    = 'http://www.w3.org/2000/svg';
+        const group = document.getElementById(groupId);
         while (group.firstChild) group.removeChild(group.firstChild);
 
-        const sorted = [...registrations].sort((a, b) => a.ageMonths - b.ageMonths);
+        const sorted = [...data].sort((a, b) => a.ageMonths - b.ageMonths);
 
         for (let i = 1; i < sorted.length; i++) {
             const line = document.createElementNS(ns, 'line');
             line.setAttribute('x1', ageToX(sorted[i - 1].ageMonths).toFixed(1));
-            line.setAttribute('y1', weightToY(sorted[i - 1].weightKg).toFixed(1));
+            line.setAttribute('y1', toY(sorted[i - 1].value).toFixed(1));
             line.setAttribute('x2', ageToX(sorted[i].ageMonths).toFixed(1));
-            line.setAttribute('y2', weightToY(sorted[i].weightKg).toFixed(1));
-            line.setAttribute('style', 'stroke:rgb(220,30,30);stroke-width:1.5');
+            line.setAttribute('y2', toY(sorted[i].value).toFixed(1));
+            line.setAttribute('style', `stroke:${color};stroke-width:1.5`);
             group.appendChild(line);
         }
 
-        for (const point of sorted) {
-            const x = ageToX(point.ageMonths).toFixed(1);
-            const y = weightToY(point.weightKg).toFixed(1);
-            const label = point.weightKg.toFixed(1).replace('.', ',') + ' kg  (age ' + point.ageMonths + ' mo)';
+        for (const pt of sorted) {
+            const x     = ageToX(pt.ageMonths).toFixed(1);
+            const y     = toY(pt.value).toFixed(1);
+            const label = pt.value.toFixed(1).replace('.', ',') + ' ' + unit + '  (' + pt.ageMonths + ' mnd)';
             const circle = document.createElementNS(ns, 'circle');
             circle.setAttribute('cx', x);
             circle.setAttribute('cy', y);
             circle.setAttribute('r', '4');
-            circle.setAttribute('fill', 'rgb(220,30,30)');
+            circle.setAttribute('fill', color);
             circle.setAttribute('style', 'cursor:crosshair');
             circle.addEventListener('mousemove', (evt) => showTooltip(evt, label));
             circle.addEventListener('mouseout', hideTooltip);
@@ -4618,39 +4678,50 @@
         }
     }
 
-    function updateList() {
-        const list = document.getElementById('reg-list');
-        if (registrations.length === 0) { list.innerHTML = ''; return; }
-        const sorted = [...registrations].sort((a, b) => a.ageMonths - b.ageMonths);
-        list.innerHTML = '<strong>Registrations:</strong><ul style="margin:6px 0;padding-left:18px;">' +
+    // ── Generic list updater ─────────────────────────────────────────────────────
+    function updateList(listId, data, unit) {
+        const el = document.getElementById(listId);
+        if (data.length === 0) { el.innerHTML = ''; return; }
+        const sorted = [...data].sort((a, b) => a.ageMonths - b.ageMonths);
+        el.innerHTML = '<strong>Registreringer:</strong><ul style="margin:4px 0;padding-left:16px;">' +
             sorted.map(p =>
-                `<li>${p.ageMonths} mo: ${p.weightKg.toFixed(1).replace('.', ',')} kg</li>`
+                `<li>${p.ageMonths} mnd: ${p.value.toFixed(1).replace('.', ',')} ${unit}</li>`
             ).join('') + '</ul>';
     }
 
-    document.getElementById('weight-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const age    = parseFloat(document.getElementById('age-input').value);
-        const weight = parseFloat(document.getElementById('weight-input').value);
-        if (isNaN(age) || isNaN(weight)) return;
-        if (age < 0 || age > 12 || weight < 2 || weight > 15) return;
-        registrations.push({ ageMonths: age, weightKg: weight });
-        redraw();
-        updateList();
-        document.getElementById('age-input').value    = '';
-        document.getElementById('weight-input').value = '';
-    });
+    // ── Form helpers ─────────────────────────────────────────────────────────────
+    function makeHandler(formId, ageId, valId, store, groupId, toY, color, unit, listId, min, max) {
+        document.getElementById(formId).addEventListener('submit', function (e) {
+            e.preventDefault();
+            const age = parseFloat(document.getElementById(ageId).value);
+            const val = parseFloat(document.getElementById(valId).value);
+            if (isNaN(age) || isNaN(val)) return;
+            if (age < 0 || age > 12 || val < min || val > max) return;
+            store.push({ ageMonths: age, value: val });
+            redraw(groupId, store, toY, color, unit);
+            updateList(listId, store, unit);
+            document.getElementById(ageId).value = '';
+            document.getElementById(valId).value = '';
+        });
+    }
 
+    makeHandler('weight-form',  'age-weight',  'val-weight',
+        weightData,   'weight-data',   weightToY,   'rgb(220,30,30)',  'kg', 'weight-list',   2,  15);
+    makeHandler('length-form',  'age-length',  'val-length',
+        lengthData,   'length-data',   lengthToY,   'rgb(30,100,220)', 'cm', 'length-list',  45,  85);
+    makeHandler('headcirc-form','age-headcirc','val-headcirc',
+        headCircData, 'headcirc-data', headCircToY, 'rgb(30,160,90)',  'cm', 'headcirc-list', 32, 52);
+
+    // ── Tooltip ──────────────────────────────────────────────────────────────────
     function showTooltip(evt, text) {
-        const tooltip = document.getElementById("tooltip");
+        const tooltip = document.getElementById('tooltip');
         tooltip.innerHTML = text;
-        tooltip.style.display = "block";
+        tooltip.style.display = 'block';
         tooltip.style.left = evt.pageX + 10 + 'px';
         tooltip.style.top  = evt.pageY + 10 + 'px';
     }
-
     function hideTooltip() {
-        document.getElementById("tooltip").style.display = "none";
+        document.getElementById('tooltip').style.display = 'none';
     }
 </script>
 <style>
