@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weight-for-Age Chart (0–18 years)</title>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    #chart-container {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 450px;
+    }
+    h2 {
+      margin: 0 0 16px 0;
+      font-size: 1.1rem;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="chart-container">
+    <h2>Weight-for-Age Reference (Smoothed) — Girls 0–18 years</h2>
+    <div id="chart"></div>
+  </div>
+
+  <script>
+    const data = [
+      { age: 0,    m2sd: 2.10, mean: 2.99, p2sd: 4.27  },
+      { age: 0.25, m2sd: 3.16, mean: 4.37, p2sd: 6.04  },
+      { age: 0.50, m2sd: 4.32, mean: 5.83, p2sd: 7.88  },
+      { age: 0.75, m2sd: 5.44, mean: 7.21, p2sd: 9.57  },
+      { age: 1.00, m2sd: 6.38, mean: 8.36, p2sd: 10.96 },
+      { age: 1.50, m2sd: 7.56, mean: 9.76, p2sd: 12.59 },
+      { age: 2,    m2sd: 8.46, mean: 10.55, p2sd: 13.16 },
+      { age: 3,    m2sd: 9.71, mean: 12.19, p2sd: 15.29 },
+      { age: 4,    m2sd: 10.63, mean: 13.70, p2sd: 17.65 },
+      { age: 5,    m2sd: 11.68, mean: 15.40, p2sd: 20.30 },
+      { age: 6,    m2sd: 12.86, mean: 17.28, p2sd: 23.22 },
+      { age: 7,    m2sd: 14.17, mean: 19.34, p2sd: 26.41 },
+      { age: 8,    m2sd: 15.62, mean: 21.60, p2sd: 29.87 },
+      { age: 9,    m2sd: 17.20, mean: 24.02, p2sd: 33.55 },
+      { age: 10,   m2sd: 18.91, mean: 26.60, p2sd: 37.42 },
+      { age: 11,   m2sd: 20.73, mean: 29.30, p2sd: 41.41 },
+      { age: 12,   m2sd: 22.65, mean: 32.10, p2sd: 45.46 },
+      { age: 13,   m2sd: 24.62, mean: 34.89, p2sd: 49.46 },
+      { age: 14,   m2sd: 26.60, mean: 37.66, p2sd: 53.31 },
+      { age: 15,   m2sd: 28.56, mean: 40.31, p2sd: 56.90 },
+      { age: 16,   m2sd: 30.42, mean: 42.76, p2sd: 60.10 },
+      { age: 17,   m2sd: 32.12, mean: 44.90, p2sd: 62.78 },
+      { age: 18,   m2sd: 33.58, mean: 46.66, p2sd: 64.82 },
+    ];
+
+    const options = {
+      chart: {
+        type: 'line',
+        height: 500,
+        toolbar: { show: true },
+        zoom: { enabled: true },
+      },
+      series: [
+        {
+          name: 'Mean −2SD',
+          data: data.map(d => ({ x: d.age, y: d.m2sd })),
+        },
+        {
+          name: 'Mean',
+          data: data.map(d => ({ x: d.age, y: d.mean })),
+        },
+        {
+          name: 'Mean +2SD',
+          data: data.map(d => ({ x: d.age, y: d.p2sd })),
+        },
+      ],
+      colors: ['#2196F3', '#4CAF50', '#F44336'],
+      stroke: {
+        curve: 'straight',
+        width: [2, 2.5, 2],
+        dashArray: [0, 0, 0],
+      },
+      markers: {
+        size: 3,
+        hover: { sizeOffset: 2 },
+      },
+      xaxis: {
+        type: 'numeric',
+        title: { text: 'Age (years)', style: { fontSize: '13px' } },
+        min: 0,
+        max: 18,
+        tickAmount: 18,
+        labels: {
+          formatter: val => Number(val) % 1 === 0 ? String(Math.round(val)) : val.toFixed(2),
+        },
+      },
+      yaxis: {
+        title: { text: 'Weight (kg)', style: { fontSize: '13px' } },
+        min: 0,
+        max: 70,
+        tickAmount: 7,
+      },
+      tooltip: {
+        x: { formatter: val => `Age: ${val} y` },
+        y: { formatter: val => `${val.toFixed(2)} kg` },
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'center',
+      },
+      grid: {
+        borderColor: '#e0e0e0',
+        strokeDashArray: 3,
+      },
+    };
+
+    new ApexCharts(document.getElementById('chart'), options).render();
+  </script>
+</body>
+</html>
