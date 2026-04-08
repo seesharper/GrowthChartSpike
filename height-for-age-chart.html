@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Turner – Vekt 0–18 år</title>
+  <title>Turner – Høyde 0–18 år</title>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
@@ -43,7 +43,6 @@
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       padding: 20px;
-      gap: 0;
     }
 
     .sidebar {
@@ -133,36 +132,35 @@
 
   <script>
     const referenceData = [
-      { age: 0,    m2sd: 2.10,  mean: 2.99,  p2sd: 4.27  },
-      { age: 0.25, m2sd: 3.16,  mean: 4.37,  p2sd: 6.04  },
-      { age: 0.50, m2sd: 4.32,  mean: 5.83,  p2sd: 7.88  },
-      { age: 0.75, m2sd: 5.44,  mean: 7.21,  p2sd: 9.57  },
-      { age: 1.00, m2sd: 6.38,  mean: 8.36,  p2sd: 10.96 },
-      { age: 1.50, m2sd: 7.56,  mean: 9.76,  p2sd: 12.59 },
-      { age: 2,    m2sd: 8.46,  mean: 10.55, p2sd: 13.16 },
-      { age: 3,    m2sd: 9.71,  mean: 12.19, p2sd: 15.29 },
-      { age: 4,    m2sd: 10.63, mean: 13.70, p2sd: 17.65 },
-      { age: 5,    m2sd: 11.68, mean: 15.40, p2sd: 20.30 },
-      { age: 6,    m2sd: 12.86, mean: 17.28, p2sd: 23.22 },
-      { age: 7,    m2sd: 14.17, mean: 19.34, p2sd: 26.41 },
-      { age: 8,    m2sd: 15.62, mean: 21.60, p2sd: 29.87 },
-      { age: 9,    m2sd: 17.20, mean: 24.02, p2sd: 33.55 },
-      { age: 10,   m2sd: 18.91, mean: 26.60, p2sd: 37.42 },
-      { age: 11,   m2sd: 20.73, mean: 29.30, p2sd: 41.41 },
-      { age: 12,   m2sd: 22.65, mean: 32.10, p2sd: 45.46 },
-      { age: 13,   m2sd: 24.62, mean: 34.89, p2sd: 49.46 },
-      { age: 14,   m2sd: 26.60, mean: 37.66, p2sd: 53.31 },
-      { age: 15,   m2sd: 28.56, mean: 40.31, p2sd: 56.90 },
-      { age: 16,   m2sd: 30.42, mean: 42.76, p2sd: 60.10 },
-      { age: 17,   m2sd: 32.12, mean: 44.90, p2sd: 62.78 },
-      { age: 18,   m2sd: 33.58, mean: 46.66, p2sd: 64.82 },
+      { age: 0,     m2sd: 42.6,  m1sd: 45.1,  mean: 47.6,  p1sd: 50.1,  p2sd: 52.6  },
+      { age: 0.25,  m2sd: 51.2,  m1sd: 53.8,  mean: 56.4,  p1sd: 59.0,  p2sd: 61.6  },
+      { age: 0.50,  m2sd: 57.0,  m1sd: 59.6,  mean: 62.2,  p1sd: 64.8,  p2sd: 67.4  },
+      { age: 1.00,  m2sd: 64.3,  m1sd: 67.1,  mean: 69.9,  p1sd: 72.7,  p2sd: 75.5  },
+      { age: 1.50,  m2sd: 70.3,  m1sd: 73.2,  mean: 76.1,  p1sd: 79.0,  p2sd: 81.9  },
+      { age: 2.00,  m2sd: 74.4,  m1sd: 77.5,  mean: 80.6,  p1sd: 83.7,  p2sd: 86.8  },
+      { age: 3.00,  m2sd: 80.8,  m1sd: 84.2,  mean: 87.6,  p1sd: 91.0,  p2sd: 94.4  },
+      { age: 4.00,  m2sd: 86.3,  m1sd: 90.0,  mean: 93.7,  p1sd: 97.4,  p2sd: 101.1 },
+      { age: 5.00,  m2sd: 91.5,  m1sd: 95.4,  mean: 99.3,  p1sd: 103.2, p2sd: 107.1 },
+      { age: 6.00,  m2sd: 96.1,  m1sd: 100.3, mean: 104.5, p1sd: 108.7, p2sd: 112.9 },
+      { age: 7.00,  m2sd: 100.7, m1sd: 105.1, mean: 109.5, p1sd: 113.9, p2sd: 118.3 },
+      { age: 8.00,  m2sd: 104.9, m1sd: 109.5, mean: 114.1, p1sd: 118.7, p2sd: 123.3 },
+      { age: 9.00,  m2sd: 108.9, m1sd: 113.7, mean: 118.5, p1sd: 123.3, p2sd: 128.1 },
+      { age: 10.00, m2sd: 112.5, m1sd: 117.5, mean: 122.5, p1sd: 127.5, p2sd: 132.5 },
+      { age: 11.00, m2sd: 115.9, m1sd: 121.1, mean: 126.3, p1sd: 131.5, p2sd: 136.7 },
+      { age: 12.00, m2sd: 118.9, m1sd: 124.3, mean: 129.7, p1sd: 135.1, p2sd: 140.5 },
+      { age: 13.00, m2sd: 121.8, m1sd: 127.3, mean: 132.8, p1sd: 138.3, p2sd: 143.8 },
+      { age: 14.00, m2sd: 124.3, m1sd: 130.0, mean: 135.7, p1sd: 141.4, p2sd: 147.1 },
+      { age: 15.00, m2sd: 126.6, m1sd: 132.4, mean: 138.2, p1sd: 144.0, p2sd: 149.8 },
+      { age: 16.00, m2sd: 128.4, m1sd: 134.4, mean: 140.4, p1sd: 146.4, p2sd: 152.4 },
+      { age: 17.00, m2sd: 130.1, m1sd: 136.2, mean: 142.3, p1sd: 148.4, p2sd: 154.5 },
+      { age: 18.00, m2sd: 131.5, m1sd: 137.7, mean: 143.9, p1sd: 150.1, p2sd: 156.3 },
     ];
 
     const { ComposedChart, Line, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend } = Recharts;
     const e = React.createElement;
 
     function formatAge(years) {
-      const y = Math.floor(years);
+      const y  = Math.floor(years);
       const mo = Math.round((years - y) * 12);
       if (y === 0) return mo + ' mnd';
       if (mo === 0) return y + ' år';
@@ -170,20 +168,20 @@
     }
 
     function App() {
-      const [name, setName]           = React.useState('');
-      const [dob, setDob]             = React.useState('');
-      const [ageInput, setAgeInput]   = React.useState('');
-      const [wtInput, setWtInput]     = React.useState('');
-      const [measurements, setMeas]   = React.useState([]);
+      const [name, setName]         = React.useState('');
+      const [dob, setDob]           = React.useState('');
+      const [ageInput, setAgeInput] = React.useState('');
+      const [htInput, setHtInput]   = React.useState('');
+      const [measurements, setMeas] = React.useState([]);
 
-      function handleWeight(ev) {
+      function handleHeight(ev) {
         ev.preventDefault();
         const age = parseFloat(ageInput);
-        const wt  = parseFloat(wtInput);
-        if (isNaN(age) || isNaN(wt) || age < 0 || age > 18 || wt <= 0) return;
-        setMeas(prev => [...prev, { age, weight: wt }].sort((a, b) => a.age - b.age));
+        const ht  = parseFloat(htInput);
+        if (isNaN(age) || isNaN(ht) || age < 0 || age > 18 || ht <= 0) return;
+        setMeas(prev => [...prev, { age, height: ht }].sort((a, b) => a.age - b.age));
         setAgeInput('');
-        setWtInput('');
+        setHtInput('');
       }
 
       function remove(i) {
@@ -205,24 +203,26 @@
           label: { value: 'Alder (år)', position: 'insideBottom', offset: -16 },
         }),
         e(YAxis, {
-          domain: [0, 70],
-          ticks: [0,10,20,30,40,50,60,70],
-          label: { value: 'Vekt (kg)', angle: -90, position: 'insideLeft', offset: 12 },
+          domain: [40, 160],
+          ticks: [40,60,80,100,120,140,160],
+          label: { value: 'Høyde (cm)', angle: -90, position: 'insideLeft', offset: 12 },
         }),
         e(Tooltip, {
-          formatter: (value, name) => [value + ' kg', name],
+          formatter: (value, name) => [value + ' cm', name],
           labelFormatter: label => 'Alder: ' + label + ' år',
         }),
         e(Legend, { verticalAlign: 'top' }),
-        e(Line, { dataKey: 'm2sd', name: '\u22122SD', stroke: '#2196F3', strokeWidth: 2,   dot: false, isAnimationActive: false }),
+        e(Line, { dataKey: 'm2sd', name: '\u22122SD', stroke: '#2196F3', strokeWidth: 1.5, dot: false, isAnimationActive: false }),
+        e(Line, { dataKey: 'm1sd', name: '\u22121SD', stroke: '#64B5F6', strokeWidth: 1.5, dot: false, isAnimationActive: false }),
         e(Line, { dataKey: 'mean', name: 'Mean',      stroke: '#4CAF50', strokeWidth: 2.5, dot: false, isAnimationActive: false }),
-        e(Line, { dataKey: 'p2sd', name: '+2SD',      stroke: '#F44336', strokeWidth: 2,   dot: false, isAnimationActive: false }),
+        e(Line, { dataKey: 'p1sd', name: '+1SD',      stroke: '#EF9A9A', strokeWidth: 1.5, dot: false, isAnimationActive: false }),
+        e(Line, { dataKey: 'p2sd', name: '+2SD',      stroke: '#F44336', strokeWidth: 1.5, dot: false, isAnimationActive: false }),
         measurements.length > 0 && e(Scatter, {
           data: measurements,
-          dataKey: 'weight',
+          dataKey: 'height',
           name: 'Registrert',
-          fill: 'rgb(220,30,30)',
-          line: { stroke: 'rgb(220,30,30)', strokeWidth: 1.5 },
+          fill: 'rgb(30,100,220)',
+          line: { stroke: 'rgb(30,100,220)', strokeWidth: 1.5 },
           isAnimationActive: false,
         }),
       );
@@ -244,18 +244,18 @@
 
         e('hr', null),
 
-        // Weight form
-        e('h3', { style: { color: 'rgb(220,30,30)' } }, 'Vekt (kg)'),
-        e('form', { style: { display: 'flex', flexDirection: 'column', gap: '10px' }, onSubmit: handleWeight },
+        // Height form
+        e('h3', { style: { color: 'rgb(30,100,220)' } }, 'Høyde (cm)'),
+        e('form', { style: { display: 'flex', flexDirection: 'column', gap: '10px' }, onSubmit: handleHeight },
           e('div', null,
             e('label', null, 'Alder (år, 0\u201318)'),
             e('input', { type: 'number', min: '0', max: '18', step: '0.1', placeholder: 'f.eks. 5.5', value: ageInput, onChange: ev => setAgeInput(ev.target.value) }),
           ),
           e('div', null,
-            e('label', null, 'Vekt (kg)'),
-            e('input', { type: 'number', min: '0', max: '200', step: '0.1', placeholder: 'f.eks. 15.0', value: wtInput, onChange: ev => setWtInput(ev.target.value) }),
+            e('label', null, 'Høyde (cm)'),
+            e('input', { type: 'number', min: '0', max: '250', step: '0.1', placeholder: 'f.eks. 105.0', value: htInput, onChange: ev => setHtInput(ev.target.value) }),
           ),
-          e('button', { type: 'submit', style: { background: 'rgb(220,30,30)' } }, 'Legg til'),
+          e('button', { type: 'submit', style: { background: 'rgb(30,100,220)' } }, 'Legg til'),
         ),
 
         // List
@@ -264,7 +264,7 @@
           e('ul', null,
             ...measurements.map((m, i) =>
               e('li', { key: i },
-                e('span', null, formatAge(m.age) + ': ' + m.weight.toFixed(1) + ' kg'),
+                e('span', null, formatAge(m.age) + ': ' + m.height.toFixed(1) + ' cm'),
                 e('button', { onClick: () => remove(i), title: 'Slett' }, '\u00d7'),
               )
             ),
@@ -274,7 +274,7 @@
 
       return e('div', null,
         e('h1', null, "Turner's syndrome"),
-        e('h2', null, 'Vekt-for-alder \u2014 Jenter 0\u201318 år'),
+        e('h2', null, 'Høyde-for-alder \u2014 Jenter 0\u201318 år'),
         e('div', { className: 'chart-card' }, chart, sidebar),
       );
     }
